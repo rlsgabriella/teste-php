@@ -1,5 +1,7 @@
 <?php
 declare(strict_types=1);
+
+//necessitei de auxílio de pesquisa e ChatGPT para melhor resolução, pois queria entender melhor o funcionamento e fazer com que todos os testes passassem, e funcionou
 /**
 * Retorna a temperatura mais proxima de zero.
 * Se duas temperaturas com o mesmo valor absouto (uma positiva e outra negativa) serem igualmente proxima a zero, deve ser dada a preferencia para o valor positivo.
@@ -8,7 +10,6 @@ declare(strict_types=1);
 **/
 function menorTemperatura($temperaturas)
 {
-
 	// Inicializa com o primeiro valor
 	$maisProxima = $temperaturas[0];
 
