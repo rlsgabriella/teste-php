@@ -1,14 +1,29 @@
 <?php
-
+declare(strict_types=1);
 /**
 * Retorna a temperatura mais proxima de zero.
 * Se duas temperaturas com o mesmo valor absouto (uma positiva e outra negativa) serem igualmente proxima a zero, deve ser dada a preferencia para o valor positivo.
 * @param array $temperaturas Lista de temperaturas
 * @return int A temperatura mais proxima de zero
 **/
-function menorTemperatura($temperaturas) {
-	
-	return(0);
+function menorTemperatura($temperaturas)
+{
+
+	// Inicializa com o primeiro valor
+	$maisProxima = $temperaturas[0];
+
+	foreach ($temperaturas as $t) {
+		// Se a atual é mais próxima do zero
+		if (abs($t) < abs($maisProxima)) {
+			$maisProxima = $t;
+		}
+		// Se tem a mesma distância, mas é positiva, preferir a positiva
+		elseif (abs($t) === abs($maisProxima) && $t > $maisProxima) {
+			$maisProxima = $t;
+		}
+	}
+
+	return $maisProxima;
 }
 
 

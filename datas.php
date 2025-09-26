@@ -1,69 +1,78 @@
 <?php
 
 /**
-* Calcula o numero de dias entre 2 datas.
-* As datas passadas sempre serao validas e a primeira data sempre sera menor que a segunda data.
-* @param string $dataInicial No formato YYYY-MM-DD
-* @param string $dataFinal No formato YYYY-MM-DD
-* @return int O numero de dias entre as datas
-**/
-function calculaDias($dataInicial, $dataFinal) {
-    // Quebra as datas em ano, mes e dia
-    list($ano1, $mes1, $dia1) = explode("-", $dataInicial);
-    list($ano2, $mes2, $dia2) = explode("-", $dataFinal);
+ * Calcula o numero de dias entre 2 datas.
+ * As datas passadas sempre serao validas e a primeira data sempre sera menor que a segunda data.
+ * @param string $dataInicial No formato YYYY-MM-DD
+ * @param string $dataFinal No formato YYYY-MM-DD
+ * @return int O numero de dias entre as datas
+ **/
 
-    // Converte para inteiros
-    $ano1 = (int)$ano1;
-    $mes1 = (int)$mes1;
-    $dia1 = (int)$dia1;
-    $ano2 = (int)$ano2;
-    $mes2 = (int)$mes2;
-    $dia2 = (int)$dia2;
+// Função auxiliar: verifica se ano é bissexto
+function ehBissexto($ano)
+{
+	if ($ano % 400 == 0)
+		return true;
+	if ($ano % 100 == 0)
+		return false;
+	if ($ano % 4 == 0)
+		return true;
+	return false;
+}
 
-    // Função auxiliar: verifica se ano é bissexto
-    function ehBissexto($ano) {
-        if ($ano % 400 == 0) return true;
-        if ($ano % 100 == 0) return false;
-        if ($ano % 4 == 0) return true;
-        return false;
-    }
+// Função auxiliar: retorna os dias de cada mês de um ano
+function diasPorMes($ano)
+{
+	$dias = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+	if (ehBissexto($ano)) {
+		$dias[1] = 29; // fevereiro = 29
+	}
+	return $dias;
+}
 
-    // Função auxiliar: retorna os dias de cada mês de um ano
-    function diasPorMes($ano) {
-        $dias = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-        if (ehBissexto($ano)) {
-            $dias[1] = 29; // fevereiro = 29
-        }
-        return $dias;
-    }
+// Função auxiliar: transforma data em "quantidade de dias desde ano 0"
+function diasDesdeAnoZero($ano, $mes, $dia)
+{
+	$total = 0;
 
-    // Função auxiliar: transforma data em "quantidade de dias desde ano 0"
-    function diasDesdeAnoZero($ano, $mes, $dia) {
-        $total = 0;
+	// Soma os dias dos anos completos anteriores
+	for ($i = 0; $i < $ano; $i++) {
+		$total += ehBissexto($i) ? 366 : 365;
+	}
 
-        // Soma os dias dos anos completos anteriores
-        for ($i = 0; $i < $ano; $i++) {
-            $total += ehBissexto($i) ? 366 : 365;
-        }
+	// Soma os dias dos meses anteriores no mesmo ano
+	$diasMes = diasPorMes($ano);
+	for ($m = 1; $m < $mes; $m++) {
+		$total += $diasMes[$m - 1];
+	}
 
-        // Soma os dias dos meses anteriores no mesmo ano
-        $diasMes = diasPorMes($ano);
-        for ($m = 1; $m < $mes; $m++) {
-            $total += $diasMes[$m - 1];
-        }
+	// Soma os dias do mês atual
+	$total += $dia;
 
-        // Soma os dias do mês atual
-        $total += $dia;
+	return $total;
+}
+function calculaDias($dataInicial, $dataFinal)
+{
+	// Quebra as datas em ano, mes e dia
+	list($ano1, $mes1, $dia1) = explode("-", $dataInicial);
+	list($ano2, $mes2, $dia2) = explode("-", $dataFinal);
 
-        return $total;
-    }
+	// Converte para inteiros
+	$ano1 = (int) $ano1;
+	$mes1 = (int) $mes1;
+	$dia1 = (int) $dia1;
+	$ano2 = (int) $ano2;
+	$mes2 = (int) $mes2;
+	$dia2 = (int) $dia2;
 
-    // Calcula dias absolutos das duas datas
-    $dias1 = diasDesdeAnoZero($ano1, $mes1, $dia1);
-    $dias2 = diasDesdeAnoZero($ano2, $mes2, $dia2);
 
-    // Diferença
-    return $dias2 - $dias1;
+
+	// Calcula dias absolutos das duas datas
+	$dias1 = diasDesdeAnoZero($ano1, $mes1, $dia1);
+	$dias2 = diasDesdeAnoZero($ano2, $mes2, $dia2);
+
+	// Diferença
+	return $dias2 - $dias1;
 }
 
 /***** Testes *****/
@@ -75,12 +84,13 @@ verificaResultado("01", $resultadoEsperado, $resultado);
 
 // (... os outros testes ficam aqui ...)
 
-function verificaResultado($nTeste, $resultadoEsperado, $resultado) {
-    if(intval($resultadoEsperado) == intval($resultado)) {
-        echo "Teste $nTeste passou.\n";
-    } else {
-        echo "Teste $nTeste NAO passou (Resultado esperado = $resultadoEsperado, Resultado obtido = $resultado).\n";
-    }
+function verificaResultado($nTeste, $resultadoEsperado, $resultado)
+{
+	if (intval($resultadoEsperado) == intval($resultado)) {
+		echo "Teste $nTeste passou.\n";
+	} else {
+		echo "Teste $nTeste NAO passou (Resultado esperado = $resultadoEsperado, Resultado obtido = $resultado).\n";
+	}
 }
 
 /***** Teste 01 *****/
